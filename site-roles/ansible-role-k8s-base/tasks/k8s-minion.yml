@@ -1,0 +1,29 @@
+---
+
+- name: "Configure flanneld server"
+  template:
+    src: "{{ item }}.j2"
+    dest: "/etc/sysconfig/{{ item }}"
+    owner: root
+    group: root
+    mode: 0644
+  with_items:
+    - flanneld
+
+- name: "Configure kubelet"
+  template:
+    src: "{{ item }}.j2"
+    dest: "/etc/kubernetes/{{ item }}"
+    owner: root
+    group: root
+    mode: 0644
+  with_items:
+    - kubelet
+
+- name: "Enable & start master services"
+  service:
+    name: "{{ item }}"
+    state: started
+    enabled: true
+  with_items:
+    - "{{ k8s_minion_services }}"

@@ -1,0 +1,17 @@
+[master_nodes]
+{% for name in groups['master_nodes'] %}
+{{ name }} ansible_host={{ hostvars[name]['ansible_host'] }}
+{% endfor %}
+
+[master_nodes:vars]
+master_eip={{ master_eip }}
+
+[worker_nodes]
+{% for name in groups['worker_nodes'] %}
+{{ name }} ansible_host={{ hostvars[name]['ansible_host'] }}
+{% endfor %}
+
+[all:vars]
+ansible_user=core
+ansible_ssh_private_key_file=../secret/id_rsa_{{ ssh_key }}
+ansible_python_interpreter=/home/core/bin/python

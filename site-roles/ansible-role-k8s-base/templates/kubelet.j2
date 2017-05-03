@@ -1,0 +1,15 @@
+# The address for the info server to serve on
+KUBELET_ADDRESS="--address={{ k8s_kubelet_listen_address }}"
+
+# The port for the info server to serve on
+KUBELET_PORT="--port={{ k8s_kubelet_port }}"
+
+# You may leave this blank to use the actual hostname
+# Check the node number!
+KUBELET_HOSTNAME="--hostname-override={{ inventory_hostname }}"
+
+# Location of the api-server
+KUBELET_API_SERVER="--api-servers=http://{{ hostvars[groups['k8s_masters'][0]]['inventory_hostname'] }}:{{ k8s_apiserver_port }}"
+
+# Add your own!
+KUBELET_ARGS=""

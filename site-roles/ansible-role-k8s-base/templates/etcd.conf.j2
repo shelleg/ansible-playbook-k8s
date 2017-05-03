@@ -1,0 +1,8 @@
+# {{ ansible_managed }}
+# [member]
+ETCD_NAME=default
+ETCD_DATA_DIR="/var/lib/etcd/default.etcd"
+ETCD_LISTEN_CLIENT_URLS="http://{{ k8s_etcd_listen_address }}:{{ k8s_etcd_port }}"
+
+#[cluster]
+ETCD_ADVERTISE_CLIENT_URLS="http://{{ k8s_etcd_listen_address }}:{{ k8s_etcd_port }}"

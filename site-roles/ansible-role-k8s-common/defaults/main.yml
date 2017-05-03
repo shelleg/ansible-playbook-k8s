@@ -1,0 +1,5 @@
+---
+# defaults file for ansible-role-k8s-common
+
+# use DNS / local resolution true|false
+k8s_local_resolution: true

@@ -1,0 +1,60 @@
+---
+- name: "Configure etcd server"
+  template:
+    src: "{{ item }}.j2"
+    dest: "/etc/etcd/{{ item }}"
+    owner: root
+    group: root
+    mode: 0644
+  with_items:
+    - etcd.conf
+
+- name: "Enable & start etcd service"
+  service:
+    name: "{{ item }}"
+    state: started
+    enabled: true
+  with_items:
+    - etcd
+
+- name: "Check to see if network exists"
+  shell: >
+        etcdctl ls {{ k8s_flannel_etc_prefix }}/config
+  ignore_errors: true
+  register: etcd_ls
+
+- name: "Create etcd network overlay"
+  shell: >
+          etcdctl mkdir {{ k8s_flannel_etc_prefix }} && \
+          etcdctl mk /kube/network/config "{ \"Network\": \"{{ k8s_cluster_ip_range }}\", \"SubnetLen\": 24, \"Backend\": { \"Type\": \"vxlan\" } }"
+  register: etc_net_create
+  when: etcd_ls.rc != 0
+
+- name: "Configure flanneld server"
+  template:
+    src: "{{ item }}.j2"
+    dest: "/etc/sysconfig/{{ item }}"
+    owner: root
+    group: root
+    mode: 0644
+  with_items:
+    - flanneld
+
+- name: "Configure API server"
+  template:
+    src: "{{ item }}.j2"
+    dest: "/etc/kubernetes/{{ item }}"
+    owner: root
+    group: root
+    mode: 0644
+  with_items:
+    - apiserver
+    - config
+
+- name: "Enable & start master services"
+  service:
+    name: "{{ item }}"
+    state: started
+    enabled: true
+  with_items:
+    - "{{ k8s_master_services }}"

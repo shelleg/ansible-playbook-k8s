@@ -1,0 +1,54 @@
+---
+# tasks file for ansible-role-k8s-common
+
+- name: "Install system requirements"
+  package:
+    name: "{{ item }}"
+    state: latest
+  with_items:
+    - vim
+
+- name: "A workaround for determining the network interface"
+  set_fact:
+    is_vagrant: true
+  when: ansible_virtualization_type == "virtualbox"
+  tags:
+    - hosts
+
+- debug: var=groups['all']
+  tags:
+    - hosts
+
+- debug: var=hostvars
+  tags:
+    - hosts
+
+- name: "Update /etc/hosts when DNS not avail"
+  template:
+    src: hosts.j2
+    dest: /etc/hosts
+    owner: root
+    group: root
+    mode: 0644
+  become: true
+  when: k8s_local_resolution
+  tags:
+    - hosts
+
+- set_fact:
+    hostname: "{{ inventory_hostname_short }}"
+
+- name: "Set Hostname with hostname command"
+  hostname: name="{{ hostname }}"
+
+- name: "Generate fact list from template"
+  template:
+    src: "dump_variables.j2"
+    dest: /tmp/ansible_variables
+  when: debug is defined
+
+- name: "Getch them locally"
+  fetch:
+    src: /tmp/ansible_variables
+    dest: "{{inventory_hostname}}_ansible_variables"
+  when: debug is defined

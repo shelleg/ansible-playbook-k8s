@@ -1,0 +1,5 @@
+---
+k8s_base_packages:
+  - kubernetes
+  - etcd
+  - flannel

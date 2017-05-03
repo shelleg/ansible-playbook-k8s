@@ -1,0 +1,4 @@
+---
+# defaults file for ansible-role-kubectl-cfg
+
+k8s_apiserver_port: 8080

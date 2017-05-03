@@ -1,0 +1,23 @@
+---
+# tasks file for ansible-role-k8s-inventory-init
+
+- name: "Check for local inventory file"
+  stat:
+    path: "{{ inventory_dir }}/inventory"
+  register: inv_file
+
+- name: "Backing up old invntory (if exists)"
+  copy:
+    src: "{{ inventory_dir }}/inventory"
+    dest: "{{ inventory_dir }}/inventory_backup"
+  when: inv_file.stat.exists
+
+- file:
+    path: "{{ inventory_dir }}/inventory"
+    state: absent
+  when: inv_file.stat.exists
+
+- name: write inventory file
+  template:
+    src: inventory.j2
+    dest: "{{ inventory_dir }}/inventory"

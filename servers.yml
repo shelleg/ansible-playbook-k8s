@@ -1,0 +1,24 @@
+---
+- name: k8s-master01
+  box: centos/7
+  provider: virtualbox
+  ram: 1024
+  ip: 172.16.1.2
+
+- name: k8s-minion01
+  box: centos/7
+  provider: virtualbox
+  ram: 1024
+  ip: 172.16.1.3
+
+- name: k8s-minion02
+  box: centos/7
+  provider: virtualbox
+  ram: 1024
+  ip: 172.16.1.4
+
+- name: k8s-minion03
+  box: centos/7
+  provider: virtualbox
+  ram: 1024
+  ip: 172.16.1.5

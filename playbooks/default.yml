@@ -1,0 +1,31 @@
+---
+- hosts: all:!localhost
+  become: true
+  tasks:
+
+- hosts: all:!localhost
+  become: true
+#  tasks:
+
+  roles:
+    - role: shelleg.ntp
+    - role: ansible-role-k8s-common
+
+- hosts: k8s_masters
+  become: true
+  roles:
+    - role: ansible-role-k8s-base
+    - role: ansible-role-kubectl-cfg
+
+- hosts: k8s_minions
+  become: true
+  roles:
+    - role: ansible-role-k8s-base
+
+- hosts: k8s-minion03
+  become: true
+  roles:
+    - role: ansible-role-k8s-common
+    - role: andrewrothstein.kubectl
+    - role: ansible-role-kubectl-cfg
+

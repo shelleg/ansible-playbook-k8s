@@ -1,0 +1,15 @@
+[k8s_masters]
+k8s-master01 ansible_host=hagzag1.mylabserver.com
+
+[k8s_minions]
+k8s-minion01 ansible_host=hagzag2.mylabserver.com
+k8s-minion02 ansible_host=hagzag3.mylabserver.com
+
+[localhost]
+localhost ansible_connection=local
+
+[all:vars]
+ansible_user="user"
+ansible_ssh_private_key_file="~/.ssh/id_rsa"
+
+
